@@ -1,5 +1,5 @@
 const { json } = require('body-parser')
-var jsonFilmes = require('../modulo/filmes.js')
+var jsonFilmes = require('../module/filmes.js')
 
 const filme = jsonFilmes.filmes
 
@@ -22,7 +22,6 @@ const getTodosFilmes = function () {
             valor_unitario: getFilmes.valor_unitario
             
         }
-
         arrayFilmes.push(jsonfilmeIN)
 
         jsonFilme.getFilmes = arrayFilmes
@@ -65,5 +64,7 @@ const getFilmesId = function (id) {
 
 }
 
-getTodosFilmes()
-getFilmesId()
+module.exports = {
+    getTodosFilmes,
+    getFilmesId
+}
