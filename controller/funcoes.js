@@ -1,3 +1,4 @@
+const { json } = require('body-parser')
 var jsonFilmes = require('../modulo/filmes.js')
 
 const filme = jsonFilmes.filmes
@@ -32,7 +33,37 @@ const getTodosFilmes = function () {
 
 }
 
-const getFilmesId = function () {
-    let
+const getFilmesId = function (id) {
+
+    let idFilme = Number(id)
+    let filme = jsonFilmes.filmes.filmes
+    let arrayFilmes = []
+    let jsonFilme = {}
+
+    filme.forEach(function (getFilmesId) {
+        if(getFilmesId.id == idFilme) {
+
+            let filmesId = {
+
+            id: getFilmesId.id,
+            nome: getFilmesId.nome,
+            sinopse: getFilmesId.sinopse,
+            duracao: getFilmesId.duracao,
+            data_lancamento: getFilmesId.data_lancamento,
+            data_relancamento: getFilmesId.data_relancamento,
+            foto_capa: getFilmesId.foto_capa,
+            valor_unitario: getFilmesId.valor_unitario
+            }
+
+            arrayFilmes.push(filmesId)
+
+        }
+
+        jsonFilme.getFilmes = arrayFilmes
+    })
+
+
 }
+
 getTodosFilmes()
+getFilmesId()
