@@ -1,3 +1,13 @@
+//para realiza a integracção do banco de dados precisaos de uma biblioteca 
+//SEQUELIZE ORM - Bilioteca mais antiga 
+//PRISMA ORM - Biblioteca mais atual 
+//FASTIFY ORM - Bilioteca mais atual
+
+//PRISMA - 
+//nm install prisma --save (quem realiza a conxão com o banco de dados)
+//npm install @prisma/client --save (é qem execulta o scripits SQL e BO)
+//npx prisma init (deveos rodar apos as instalações acima, ele inicializa a utilização do prisma no projeto)
+
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
@@ -14,7 +24,11 @@ app.use((request, response, next ) => {
 
     next()
 })
+//import dos aquivos internos do projeto
+const controlerFilmes = require('./controller/controller_filme.js')
 
+
+//Endpoints com a minha versão e a do professor sendo a v2
 app.get('/v1/Acme-Filmes/TodosFilmes', cors(), async function(request, response, next){
     let controlarTodosFilmes = require('./controller/funcoes.js')
     let filmes = controlarTodosFilmes.getTodosFilmes()
@@ -36,6 +50,22 @@ app.get('/v1/Acme-Filmes/TodosFilmesID', cors(), async function(request, respons
         response.json({erro: 'O item desejado não foi localizado.'})
    }
 })
+
+app.get('/v2/Acme-Filmes/Filmes', cors(), async function(request, response, next){
+    //chama a função para retornar os dados de filmes
+    let dadosFilmes = await controlerFilmes.getListarFilmes()
+
+    //validação para retornar os dados ou o erro quando não encontrar os dados no banco
+    if(dadosFilmes){
+        response.json(dadosFilmes)
+        response.status(200)
+
+    }else {
+        response.json({message: 'Nenhum registro encontrado'})
+    }
+})
+
+
 
 app.listen(8080, function(){
     console.log('AAAAAAAAAAA')

@@ -1,0 +1,20 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+// pode dar ero em servidor de nuvem por ele se perder.
+// colocar o conteudo do .env a url dentro das áspas.
+  url      = env("DATABASE_URL")
+}
+
+model tbl_teste {
+  id Int @id @default(autoincrement())
+  nome String 
+
+
+}
