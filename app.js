@@ -36,19 +36,14 @@ app.get('/v1/Acme-Filmes/TodosFilmes', cors(), async function(request, response,
     response.status(200)
 })
 
-app.get('/v1/Acme-Filmes/TodosFilmesID', cors(), async function(request, response, next){
-   let id = request.query.id
-   let controlarTodosFilmes = require('./controller/funcoes.js')
-   let filmes = controlarTodosFilmes.getFilmesId(id)
+app.get('/v2/Acme-Filmes/Filmes/:id', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let idFilme = request.params.id
+   let dadosFilme = await controlerFilmes.getBuscarFilme(idFilme)
 
-   if(filmes) {
-    response.json(filmes)
-    response.status(200)
+   response.status(dadosFilme.status_code)
+   response.json(dadosFilme)
 
-   } else {
-        response.status(404)
-        response.json({erro: 'O item desejado não foi localizado.'})
-   }
 })
 
 app.get('/v2/Acme-Filmes/Filmes', cors(), async function(request, response, next){
