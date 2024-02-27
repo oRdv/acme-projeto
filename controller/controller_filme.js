@@ -84,10 +84,39 @@ const getBuscarFilme = async function(id){
     }
 }
 
+const getNameFilme = async function(filtro) {
+
+    let nameFilme = filtro
+    let filmeJson = {}
+
+    if(nameFilme == '' || nameFilme == undefined){
+        return message.ERROS_NAME_NOT_FOUND
+    }else {
+        let nomesFilmes = await filmesDAO.selectByNameFilme(nameFilme)
+
+        if(nomesFilmes) {
+
+            console.log(nomesFilmes)
+            
+            if(nomesFilmes.length > 0){
+                filmeJson.filme = nomesFilmes
+                filmeJson.status_code = 200
+
+                return filmeJson
+            }else{
+                return message.ERROS_NOT_FOUND
+            }
+        }else{
+            return message.ERROS_INTERNAL_SERVER_DB
+        }
+    }
+}
+
 module.exports = {
     setInserirNovoFilme,
     setAtualizarFilme,
     setExcluirFilme,
     getListarFilmes,
-    getBuscarFilme
+    getBuscarFilme,
+    getNameFilme
 }

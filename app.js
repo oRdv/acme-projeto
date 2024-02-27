@@ -2,6 +2,8 @@
 //SEQUELIZE ORM - Bilioteca mais antiga 
 //PRISMA ORM - Biblioteca mais atual 
 //FASTIFY ORM - Bilioteca mais atual
+//:/ params - apenas id
+///?nome query - apenas nomes
 
 //PRISMA - 
 //nm install prisma --save (quem realiza a conxão com o banco de dados)
@@ -58,6 +60,16 @@ app.get('/v2/Acme-Filmes/Filmes', cors(), async function(request, response, next
     }else {
         response.json({message: 'Nenhum registro encontrado'})
     }
+})
+
+app.get('/v2/Acme-Filmes/filtro/filmes', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let filtro = request.query.nome
+   let dadosFilme = await controlerFilmes.getNameFilme(filtro)
+
+   response.status(dadosFilme.status_code)
+   response.json(dadosFilme)
+
 })
 
 
