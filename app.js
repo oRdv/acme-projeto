@@ -20,12 +20,16 @@ const app = express()
 
 app.use((request, response, next ) => {
     response.header('Access-Control-Allow-Origin', '*')
-    response.header('Access-Control-Allow-Methods', 'Get')
+    response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
 
     app.use(cors())
 
     next()
 })
+
+//cria um objeto para definir o tipo de dados que ira chegar no body (JSON) NAO FUNCIONA SEM ESSA LINHA 
+const bodyParserJson = bodyParser.json()
+
 //import dos aquivos internos do projeto
 const controlerFilmes = require('./controller/controller_filme.js')
 
@@ -70,6 +74,14 @@ app.get('/v2/Acme-Filmes/filtro/filmes', cors(), async function(request, respons
    response.status(dadosFilme.status_code)
    response.json(dadosFilme)
 
+})
+
+app.post('v2/Acme-Filmes/filme', cors(), bodyParserJson, async function(request, response, next){
+    let dadosBody = request.body;
+    let resulDados = await controlerFilmes.setInserirNovoFilme(dadosBody)
+
+    response.status(resulDados.status_code)
+    response.json(resulDados)
 })
 
 

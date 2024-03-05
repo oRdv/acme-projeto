@@ -7,12 +7,18 @@
  const ERROS_NOT_FOUND = {status: false, status_code: 404, message: "NENHUM ITEM ENCONTRADO NA REQUISIÇÃO."}
  const ERROS_INTERNAL_SERVER_DB = {status: false, status_code: 500, message: "OCORRERAM NO PROCESAMENTO DO BANCO DE DADOS - CONTATE O ADMINISTRADOR DA API."}
  const ERROS_NAME_NOT_FOUND = {status: false, status_code: 400, message: "NENHUM NOME FOI ENCONTRADO NA REQUISIÇÃO."}
+ const ERROS_REQUIRED_FIELDS = {status: false, status_code:400, message: "EXISTE AMPOS OBRIGATÓRIOS QUE NAO FORAM PREENCHIDOS, OU UTRAPASSARAM O LIMITE DE CARACTERES"}
+ 
+//message de sucesso.
 
+   const SUCESSED_CREATED_ITEM = {status: true, status_code: 201, message: "O ITEM FOI CRIADO COM SUCESSO NO BANCO DE DADOS"}
 
  module.exports = {
     ERROS_INVALID_ID,
     ERROS_NOT_FOUND,
     ERROS_INTERNAL_SERVER_DB,
-    ERROS_NAME_NOT_FOUND
+    ERROS_NAME_NOT_FOUND,
+    ERROS_REQUIRED_FIELDS,
+    SUCESSED_CREATED_ITEM
      
  }

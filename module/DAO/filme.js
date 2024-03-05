@@ -11,7 +11,61 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 //Função para inserir um novo filme no banco de dados
-const insertNovoFilme = async function(){
+const insertNovoFilme = async function(dadosFilme){
+    let sql
+    try{
+
+        //if pq a dat de relancamento pode ser vazia, ent se faz esse tratamento, obs: essa condicao é provisoria e errada, iremos tratar no bd com uma procedure;
+        if(dadosFilme.data_relancamento == null || 
+        dadosFilme.data_relancamento == undefined ||
+        dadosFilme.data_relancamento == ''){  
+             sql = `insert ito tbl_filme (nome, 
+                                            sinopse, 
+                                            duracao,   
+                                            data_lancamento, 
+                                            data_relancamento,
+                                            foto_capa, 
+                                            valor_unitario) 
+                                            values (
+                                                '${dadosFilme.nome}',
+                                                '${dadosFilme.sinopse}',
+                                                '${dadosFilme.duracao}',
+                                                '${dadosFilme.data_lancamento}',
+                                                null,
+                                                '${dadosFilme.foto_capa}',
+                                                '${dadosFilme.vallor_unitario}'
+                                                )`
+        } else {
+            sql = `insert ito tbl_filme (nome, 
+                                            sinopse, 
+                                            duracao,   
+                                            data_lancamento, 
+                                            data_relancamento,
+                                            foto_capa, 
+                                            valor_unitario) 
+                                            values (
+                                                '${dadosFilme.nome}',
+                                                '${dadosFilme.sinopse}',
+                                                '${dadosFilme.duracao}',
+                                                '${dadosFilme.data_lancamento}',
+                                                '${dadosFilme.data_relancamento}',
+                                                '${dadosFilme.foto_capa}',
+                                                '${dadosFilme.vallor_unitario}'
+                                                )`
+        }
+    
+        //$executeRawUnsafe para utilizar um sql de insert que nao retornam valores. o outro queryrawunsafee para select e retornm dados.
+        let result = await prisma.$executeRawUnsafe(sql)
+        
+        if(result){
+            return true
+        }else{
+            return false
+        }
+    }catch(error){
+        return false
+    }
+
 
 }
 
