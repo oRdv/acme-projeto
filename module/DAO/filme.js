@@ -19,7 +19,7 @@ const insertNovoFilme = async function(dadosFilme){
         if(dadosFilme.data_relancamento == null || 
         dadosFilme.data_relancamento == undefined ||
         dadosFilme.data_relancamento == ''){  
-             sql = `insert ito tbl_filme (nome, 
+             sql = `insert into tbl_filme (nome, 
                                             sinopse, 
                                             duracao,   
                                             data_lancamento, 
@@ -36,7 +36,7 @@ const insertNovoFilme = async function(dadosFilme){
                                                 '${dadosFilme.vallor_unitario}'
                                                 )`
         } else {
-            sql = `insert ito tbl_filme (nome, 
+            sql = `insert into tbl_filme (nome, 
                                             sinopse, 
                                             duracao,   
                                             data_lancamento, 
@@ -76,6 +76,16 @@ const updateFilme = async function(){
 
 //Função para deletar um filme existente no banco de dados
 const deleteFilme = async function(){
+
+    try {
+        let sql = `select cast(id as DECIMAL) from tbl_filme order by id desc limit 1`
+
+        let rsFilmes = await prisma.$queryRawUnsafe(sql)
+
+        return rsFilmes
+    }catch (error) {
+        return false
+    }
 
 }
 

@@ -8,9 +8,14 @@ const { json } = require('body-parser')
 
 
 //Função para inserir um novo filme
-const setInserirNovoFilme = async function(dadosFilme){
+const setInserirNovoFilme = async function(dadosFilme, contentType){
 
-    let statusValidated = false;
+    try {
+
+    if(String(contentType).toLowerCase() == 'application/json') {
+
+
+    let statusValidated = false
     let novoFilmeJson = {}
 
     if(dadosFilme.nome == '' || dadosFilme.nome == undefined || dadosFilme.nome == null || dadosFilme.nome.length > 80 ||
@@ -25,7 +30,10 @@ const setInserirNovoFilme = async function(dadosFilme){
     }else{
 
         //Validção de um conteudo valido
-        if(dadosFilme.data_relancamento != '' && dadosFilme.data_relancamento != null && dadosFilme.data_relancamento != undefined){
+        if(dadosFilme.data_relancamento != '' &&
+         dadosFilme.data_relancamento != null && 
+         dadosFilme.data_relancamento != undefined)
+         {
              
             //verifica a quantidade de caracteres
             if(dadosFilme.data_relancamento.length != 10){
@@ -38,7 +46,7 @@ const setInserirNovoFilme = async function(dadosFilme){
         }
 
         //se  variavel for verdadeira, podemos encaminhar os dados para o DAO
-        if(statusValidated){
+        if(statusValidated = true){
 
             //ecaminha os dados para o dao
             let novoFilme = await filmesDAO.insertNovoFilme(dadosFilme)
@@ -58,7 +66,16 @@ const setInserirNovoFilme = async function(dadosFilme){
         }
 
     }
+
+} else {
+    return message.ERROS_CONTENT_TYPE //415
 }
+    } catch(erro){
+       return smessage.ERROS_INTERNAL_SERVER
+    }
+
+}
+
 
 //Função para atualizar um filme existente
 const setAtualizarFilme = async function(){
@@ -67,6 +84,9 @@ const setAtualizarFilme = async function(){
 
 //Função para deletar um filme existente
 const setExcluirFilme = async function(){
+
+    let filmeJson = {}
+
 
 }
 
