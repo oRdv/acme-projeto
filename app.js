@@ -87,7 +87,26 @@ app.post('/v2/Acme-Filmes/filme', cors(), bodyParserJson, async function(request
     response.json(resulDados)
 })
 
+app.get('/v1/Acme-Filmes/ListarFilme', cors(), async function(request, response, next){
+    let idFilme = request.query.id
+    let controleFilmes = require('./controller/funcoes.js')
+    let filmeId = controleFilmes.getFilmesId(idFilme)
 
+    if(filmeId){
+        response.json(filmeId)
+        response.status(200)
+    }else{
+        response.status(404)
+    }
+})
+
+app.delete('/v2/Acme-Filmes/filme/:id', cors(), async function(request, response){
+    let idFilme = request.params.id
+    let dadosFilme = await controlerFilmes.setExcluirFilme(idFilme)
+
+    response.status(200)
+    response.json(dadosFilme)
+})
 
 app.listen(8080, function(){
     console.log('AAAAAAAAAAA')
