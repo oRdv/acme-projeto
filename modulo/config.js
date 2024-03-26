@@ -17,6 +17,8 @@
 //message de sucesso.
 
    const SUCESSED_CREATED_ITEM = {status: true, status_code: 201, message: "O ITEM FOI CRIADO COM SUCESSO NO BANCO DE DADOS"}
+   const SUCCESS_DELETED_ITEM = {status: true, status_code: 200, message: "O ITEM FOI APAGADO COM SUCESSO NO BANCO DE DADOS"}
+
 
  module.exports = {
     ERROS_INVALID_ID,
@@ -26,6 +28,7 @@
     ERROS_REQUIRED_FIELDS,
     SUCESSED_CREATED_ITEM,
     ERROS_CONTENT_TYPE,
-    ERROS_INTERNAL_SERVER
+    ERROS_INTERNAL_SERVER,
+    SUCCESS_DELETED_ITEM
      
  }

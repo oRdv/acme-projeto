@@ -91,7 +91,6 @@ const deleteFilme = async function(id){
 
     try {
         let sql = `delete from tbl_filme where tbl_filme.id = ${id}`
-
         let rsFilmes = await prisma.$queryRawUnsafe(sql)
 
         return rsFilmes

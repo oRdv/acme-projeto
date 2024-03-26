@@ -144,22 +144,28 @@ const setExcluirFilme = async function (id) {
         let idFilme = id
 
         //Validação para verificar se o ID é válido (vazio, indefinido ou não numérico)
-        if (idFilme == '' || idFilme == undefined || isNaN(idFilme)) {
+        if (idFilme == '' || idFilme == undefined || isNaN(idFilme) || idFilme == null) {
             return message.ERROS_INVALID_ID //400
         } else {
-            let filmeDeletado = await filmesDAO.deleteFilme(idFilme)
+            
+            let filmeId = await filmesDAO.selectByIdFilme(idFilme)
 
-            if (filmeDeletado) {
-                return message.SUCCESS_DELETED_ITEM
-            } else {
-                return message.ERROS_INTERNAL_SERVER_DB //500
+            if(filmeId.length > 0) {
+
+                let filmeDeletado = await filmesDAO.deleteFilme(idFilme)
+                
+                if(filmeDeletado){
+                    return message.SUCCESS_DELETED_ITEM //200
+                }else{
+                    return message.ERROS_INTERNAL_SERVER_DB //500
+                }
+            }else{
+                return message.ERROS_NOT_FOUND //404
             }
         }
-    } catch (error) {
-        return message.ERROS_INTERNAL_SERVER
-    }
-
-
+       } catch (error) {
+        return message.ERROS_INTERNAL_SERVER //500
+       }
 }
 
 //Função para listar todos os filmes existentes
