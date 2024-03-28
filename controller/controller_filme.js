@@ -101,7 +101,7 @@ const setAtualizarFilme = async function (id, dadosFilme, contentType) {
             }else{
                 if(dadosFilme.data_relancamento != null && dadosFilme.data_relancamento != '' && dadosFilme.data_relancamento != undefined){
     
-                    //Validação para verificar se a data está com a quantidade de dígitos correta
+    
                     if(dadosFilme.data_relancamento.length != 10){
                         return message.ERROS_REQUIRED_FIELDS //400
                     }else{
@@ -111,20 +111,18 @@ const setAtualizarFilme = async function (id, dadosFilme, contentType) {
                     statusValidated = true
                 }
     
-                //Validação para verificar se podemos encaminhar os dados para o DAO.
                 if(statusValidated){
                     dadosFilme.id = id
     
                     let novoFilme = await filmesDAO.updateFilme(dadosFilme)
     
-                    //Validação para verificar se o DAO inseriu os dados no BD.
                     if(novoFilme){
                         novoFilmeJson.filme = dadosFilme
                         novoFilmeJson.status = message.SUCCESS_UPDATED_ITEM.status
                         novoFilmeJson.status_code = message.SUCCESS_UPDATED_ITEM.status_code
                         novoFilmeJson.message = message.SUCCESS_UPDATED_ITEM.message
     
-                        return novoFilme //201
+                        return novoFilmeJson //201
                     }else{
                         return message.ERROS_INTERNAL_SERVER_DB //500
                     }
@@ -175,7 +173,6 @@ const getListarFilmes = async function () {
 
     //Puxa os dados ela função do DAO para reornar o dados do banco 
     let dadosFilmes = await filmesDAO.selectAllFilmes()
-
 
     //Validação para criar um JSON do dados 
     if (dadosFilmes) {
