@@ -95,7 +95,7 @@ const setAtualizarFilme = async function (id, dadosFilme, contentType) {
             dadosFilme.data_lancamento == ''          || dadosFilme.data_lancamento == undefined || dadosFilme.data_lancamento == null || dadosFilme.data_lancamento.length != 10   ||
             dadosFilme.foto_capa == ''                || dadosFilme.foto_capa == undefined       || dadosFilme.foto_capa == null       || dadosFilme.foto_capa.length > 200         ||
             dadosFilme.valor_unitario.length > 6
-            ){
+            ){ 
                 return message.ERROS_REQUIRED_FIELDS //400
 
             }else{

@@ -54,7 +54,6 @@ app.get('/v2/Acme-Filmes/Filmes/:id', cors(), async function(request, response, 
 
 app.get('/v2/Acme-Filmes/Filmes', cors(), async function(request, response, next){
     //chama a função para retornar os dados de filmes
-    console.log("ccheguei aqui")
     let dadosFilmes = await controlerFilmes.getListarFilmes()
 
     //validação para retornar os dados ou o erro quando não encontrar os dados no banco
@@ -101,17 +100,16 @@ app.get('/v1/Acme-Filmes/ListarFilme', cors(), async function(request, response,
     }
 })
 
-// app.put('/v2/Acme-Filmes/filme/:id', cors (), async function(request, response){
-//     let contentType = request.headers['content-type']
-//     let idFilme = request.params.id
-//     let dadosPut = request.body
+app.put('/v2/Acme-Filmes/filme/:id', cors (), async function(request, response){
+    let contentType = request.headers['content-type']
+    let idFilme = request.params.id
+    let dadosPut = request.body
 
-//     let resultFilmeUpdate = await controlerFilmes.setAtualizarFilme(idFilme, dadosPut, contentType)
+    let resultFilmeUpdate = await controlerFilmes.setAtualizarFilme(idFilme, dadosPut, contentType)
 
-//     response.status(resultFilmeUpdate.status_code)
-//     response.json(resultFilmeUpdate)
-// })
-
+    response.status(resultFilmeUpdate.status_code)
+    response.json(resultFilmeUpdate)
+})
 
 
 app.delete('/v2/Acme-Filmes/filme/:id', cors(), async function(request, response){

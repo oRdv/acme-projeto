@@ -84,40 +84,40 @@ const insertNovoFilme = async function(dadosFilme){
 //Função para atualizar um filme existente no banco de dados
 const updateFilme = async function(){
 
-    // try {
-    //     let sql
-    //     if(dadosFilme.data_relancamento != '' && dadosFilme.data_relancamento != null && dadosFilme.data_relancamento != undefined){
-    //         sql = `update tbl_filme set 
-    //         nome = '${dadosFilme.nome}',
-    //         sinopse =  '${dadosFilme.sinopse}',
-    //         duracao = '${dadosFilme.duracao}',
-    //         data_lancamento = '${dadosFilme.data_lancamento}',
-    //         data_relancamento = '${dadosFilme.data_relancamento}',
-    //         foto_capa = '${dadosFilme.foto_capa}',
-    //         valor_unitario = '${dadosFilme.valor_unitario}'
-    //         where tbl_filme.id = ${dadosFilme.id}`
-    //     }else{
-    //         sql = `update tbl_filme set 
-    //         nome = '${dadosFilme.nome}',
-    //         sinopse =  '${dadosFilme.sinopse}',
-    //         duracao = '${dadosFilme.duracao}',
-    //         data_lancamento = '${dadosFilme.data_lancamento}',
-    //         foto_capa = '${dadosFilme.foto_capa}',
-    //         valor_unitario = '${dadosFilme.valor_unitario}'
-    //         where tbl_filme.id = ${dadosFilme.id}`
-    //     }
+    try {
+        let sql
+        if(dadosFilme.data_relancamento != '' && dadosFilme.data_relancamento != null && dadosFilme.data_relancamento != undefined){
+            sql = `update tbl_filme set 
+            nome = '${dadosFilme.nome}',
+            sinopse =  '${dadosFilme.sinopse}',
+            duracao = '${dadosFilme.duracao}',
+            data_lancamento = '${dadosFilme.data_lancamento}',
+            data_relancamento = '${dadosFilme.data_relancamento}',
+            foto_capa = '${dadosFilme.foto_capa}',
+            valor_unitario = '${dadosFilme.valor_unitario}'
+            where tbl_filme.id = ${dadosFilme.id}`
+        }else{
+            sql = `update tbl_filme set 
+            nome = '${dadosFilme.nome}',
+            sinopse =  '${dadosFilme.sinopse}',
+            duracao = '${dadosFilme.duracao}',
+            data_lancamento = '${dadosFilme.data_lancamento}',
+            foto_capa = '${dadosFilme.foto_capa}',
+            valor_unitario = '${dadosFilme.valor_unitario}'
+            where tbl_filme.id = ${dadosFilme.id}`
+        }
         
-    //         let result = await prisma.$executeRawUnsafe(sql)
+            let result = await prisma.$executeRawUnsafe(sql)
 
 
-    //         if(result)
-    //             return result
+            if(result)
+                return result
 
-    //         else
-    //             return false
-    // } catch (error) {
-    //     return false
-    // }
+            else
+                return false
+    } catch (error) {
+        return false
+    }
 
 }
 
