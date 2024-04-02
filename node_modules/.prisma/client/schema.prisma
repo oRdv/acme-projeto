@@ -1,5 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
+// sincronizar o banco = npx migrate dev
 
 generator client {
   provider = "prisma-client-js"
@@ -15,6 +16,5 @@ datasource db {
 model tbl_teste {
   id Int @id @default(autoincrement())
   nome String 
-
 
 }
