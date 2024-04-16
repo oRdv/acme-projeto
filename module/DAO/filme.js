@@ -140,7 +140,7 @@ const selectAllFilmes = async function(){
     
     try {
     //scriptSQL para registrar todos os registos do db
-    let sql = 'select * from tbl_filme'
+    let sql = 'SELECT * FROM acmefilme.tbl_filme'
     //executa o scriptSQL na BD e guarda o retorno dos dados
     let rsFilmes = await prisma.$queryRawUnsafe(sql)
     
@@ -149,8 +149,6 @@ const selectAllFilmes = async function(){
     
     return false
 }
-
-
     //validação para retornar os dados e retornr falso
     if (rsFilmes.length > 0){
         return rsFilmes

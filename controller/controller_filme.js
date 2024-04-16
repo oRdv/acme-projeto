@@ -173,6 +173,7 @@ const getListarFilmes = async function () {
 
     //Puxa os dados ela função do DAO para reornar o dados do banco 
     let dadosFilmes = await filmesDAO.selectAllFilmes()
+    console.log(dadosFilmes)
 
     //Validação para criar um JSON do dados 
     if (dadosFilmes) {

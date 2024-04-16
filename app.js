@@ -55,6 +55,12 @@ app.get('/v2/Acme-Filmes/Filmes/:id', cors(), async function(request, response, 
 app.get('/v2/Acme-Filmes/Filmes', cors(), async function(request, response, next){
     //chama a função para retornar os dados de filmes
     let dadosFilmes = await controlerFilmes.getListarFilmes()
+    // let dadosFilmes = {
+    //         filme: 'Ponyo',
+    //         quantidade: '2',
+    //         status_code:'200'
+
+    // }
 
     //validação para retornar os dados ou o erro quando não encontrar os dados no banco
     if(dadosFilmes){
