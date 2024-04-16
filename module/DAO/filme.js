@@ -139,24 +139,21 @@ const deleteFilme = async function(id){
 const selectAllFilmes = async function(){
     
     try {
-    //scriptSQL para registrar todos os registos do db
-    let sql = 'SELECT * FROM acmefilme.tbl_filme'
-    //executa o scriptSQL na BD e guarda o retorno dos dados
-    let rsFilmes = await prisma.$queryRawUnsafe(sql)
-    
-    return rsFilmes
-} catch (error) {
-    
-    return false
-}
-    //validação para retornar os dados e retornr falso
-    if (rsFilmes.length > 0){
-        return rsFilmes
-    }else {
+        let sql = 'select * from tbl_filme';
+
+        //rs = result (resultado do banco)
+        //Executa o scriptSQL no BD e guarda o retorno dos dados
+        let rsFilmes = await prisma.$queryRawUnsafe(sql);
+
+         return rsFilmes;
+
+
+    } catch (error) {
+
         return false
     }
-
 }
+
 
 //Função para retornar um filme a partir de um critério (ID) no banco de dados
 const selectByIdFilme = async function(id){ 
