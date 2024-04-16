@@ -154,7 +154,6 @@ const selectAllFilmes = async function(){
     }
 }
 
-
 //Função para retornar um filme a partir de um critério (ID) no banco de dados
 const selectByIdFilme = async function(id){ 
     

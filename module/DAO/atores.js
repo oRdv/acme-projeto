@@ -118,7 +118,7 @@ const selectByIdAtores = async function(id){
         //sql pra pesquisa por id
     let sql = `select * from tbl_atores where id = ${id}`
 
-     //executa o sql no bd e retorna o filme
+     //executa o sql no bd e retorna o ator
     let rsAtores = await prisma.$queryRawUnsafe(sql)
     return rsAtores
 
