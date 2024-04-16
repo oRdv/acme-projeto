@@ -103,7 +103,7 @@ const updateFilme = async function(){
             duracao = '${dadosFilme.duracao}',
             data_lancamento = '${dadosFilme.data_lancamento}',
             foto_capa = '${dadosFilme.foto_capa}',
-            valor_unitario = '${dadosFilme.valor_unitario}'
+            valor_unitario = '${dadosFilme.valor_unitario}',
             where tbl_filme.id = ${dadosFilme.id}`
         }
         
