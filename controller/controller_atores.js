@@ -78,23 +78,23 @@ const setAtualizarAtor = async function (id, dadosAtor, contentType) {
         if (String(contentType).toLowerCase() == 'application/json') {
 
             let statusValidated = false
-            let novoFilmeJson = {}
+            let novoAtorJson = {}
 
             if(id == '' || id == undefined || isNaN(id) ||
-         dadosAtor.nome == ''                     || dadosAtor.nome == undefined            || dadosAtor.nome == null            || dadosAtor.nome.length > 80               ||
-         dadosAtor.sinopse == ''                  || dadosAtor.sinopse == undefined         || dadosAtor.sinopse == null         || dadosAtor.sinopse.length > 65000         ||
-         dadosAtor.duracao == ''                  || dadosAtor.duracao == undefined         || dadosAtor.duracao == null         || dadosAtor.duracao.length > 8             ||
-         dadosAtor.data_lancamento == ''          || dadosAtor.data_lancamento == undefined || dadosAtor.data_lancamento == null || dadosAtor.data_lancamento.length != 10   ||
-         dadosAtor.foto_capa == ''                || dadosAtor.foto_capa == undefined       || dadosAtor.foto_capa == null       || dadosAtor.foto_capa.length > 200         ||
-         dadosAtor.valor_unitario.length > 6
+            dadosAtor.nome == ''                     || dadosAtor.nome == undefined            || dadosAtor.nome == null            || dadosAtor.nome.length > 80               ||
+            dadosAtor.sinopse == ''                  || dadosAtor.sinopse == undefined         || dadosAtor.sinopse == null         || dadosAtor.sinopse.length > 65000         ||
+            dadosAtor.duracao == ''                  || dadosAtor.duracao == undefined         || dadosAtor.duracao == null         || dadosAtor.duracao.length > 8             ||
+            dadosAtor.data_lancamento == ''          || dadosAtor.data_lancamento == undefined || dadosAtor.data_lancamento == null || dadosAtor.data_lancamento.length != 10   ||
+            dadosAtor.foto_capa == ''                || dadosAtor.foto_capa == undefined       || dadosAtor.foto_capa == null       || dadosAtor.foto_capa.length > 200         ||
+            dadosAtor.valor_unitario.length > 6
             ){ 
                 return message.ERROS_REQUIRED_FIELDS //400
 
             }else{
-                if dadosAtor.data_relancamento != null && dadosAtor.data_relancamento != '' && dadosAtor.data_relancamento != undefined){
+                if(dadosAtor.data_relancamento != null && dadosAtor.data_relancamento != '' && dadosAtor.data_relancamento != undefined){
     
     
-                    if dadosAtor.data_relancamento.length != 10){
+                    if(dadosAtor.data_relancamento.length != 10){
                         return message.ERROS_REQUIRED_FIELDS //400
                     }else{
                         statusValidated = true
@@ -104,17 +104,17 @@ const setAtualizarAtor = async function (id, dadosAtor, contentType) {
                 }
     
                 if(statusValidated){
-                 dadosAtor.id = id
+                    dadosAtor.id = id
     
-                    let novoFilme = await filmesDAO.updateFilme dadosAtor)
+                    let novoFilme = await filmesDAO.updateFilme(dadosAtor)
     
                     if(novoFilme){
-                        novoFilmeJson.filme = dadosAtor
-                        novoFilmeJson.status = message.SUCCESS_UPDATED_ITEM.status
-                        novoFilmeJson.status_code = message.SUCCESS_UPDATED_ITEM.status_code
-                        novoFilmeJson.message = message.SUCCESS_UPDATED_ITEM.message
+                        novoAtorJson.filme = dadosAtor
+                        novoAtorJson.status = message.SUCCESS_UPDATED_ITEM.status
+                        novoAtorJson.status_code = message.SUCCESS_UPDATED_ITEM.status_code
+                        novoAtorJson.message = message.SUCCESS_UPDATED_ITEM.message
     
-                        return novoFilmeJson //201
+                        return novoAtorJson //201
                     }else{
                         return message.ERROS_INTERNAL_SERVER_DB //500
                     }
