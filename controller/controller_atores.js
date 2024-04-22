@@ -47,13 +47,13 @@ const setInserirNovoAtor = async function (dadosAtor, contentType) {
                     
                     if (novoAtorJson) {
                         //cria o json e retorna informacoes com requisicao e os dado novos
-                        novoAtorJsonJson.status = message.SUCESSED_CREATED_ITEM.status
-                        novoAtorJsonJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
-                        novoAtorJsonJson.message = message.SUCESSED_CREATED_ITEM.message
-                        novoAtorJsonJson.ator = dadosAtor
-                        novoAtorJsonJson.id = dadosAtor.id
+                        novoAtorJson.status = message.SUCESSED_CREATED_ITEM.status
+                        novoAtorJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
+                        novoAtorJson.message = message.SUCESSED_CREATED_ITEM.message
+                        novoAtorJson.ator = dadosAtor
+                        novoAtorJson.id = dadosAtor.id
 
-                        return novoAtorJsonJson//201
+                        return novoAtorJson//201
                     } else {
                      return message.ERROS_INTERNAL_SERVER_DB //500
                     }
@@ -106,10 +106,10 @@ const setAtualizarAtor = async function (id, dadosAtor, contentType) {
                 if(statusValidated){
                     dadosAtor.id = id
     
-                    let novoFilme = await atoresDAO.updateFilme(dadosAtor)
+                    let novoAtor = await atoresDAO.updateAtores(dadosAtor)
     
-                    if(novoFilme){
-                        novoAtorJson.filme = dadosAtor
+                    if(novoAtor){
+                        novoAtorJson.ator = dadosAtor
                         novoAtorJson.status = message.SUCCESS_UPDATED_ITEM.status
                         novoAtorJson.status_code = message.SUCCESS_UPDATED_ITEM.status_code
                         novoAtorJson.message = message.SUCCESS_UPDATED_ITEM.message
@@ -141,7 +141,7 @@ const setExcluirAtor = async function (id) {
 
             if(atorId.length > 0) {
 
-                let atorDeletado = await atoresDAO.setExcluirAtor(idAtor)
+                let atorDeletado = await atoresDAO.deleteAtor(idAtor)
                 
                 if(atorDeletado){
                     return message.SUCCESS_DELETED_ITEM //200

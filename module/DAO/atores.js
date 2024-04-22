@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client')
+const { deleteClassificacao } = require('./classificacao')
 
 const prisma = new PrismaClient()
 
@@ -94,6 +95,17 @@ const updateAtores = async function(){
 
 }
 
+const deleteAtor = async (id) => {
+    try {
+        let sql = `delete from tbl_atores where id = ${id}`;
+    
+        let redeletedAtor = await prisma.$queryRawUnsafe(sql);
+    
+        return redeletedAtor;
+      } catch (error) {
+        return false;
+    }
+}
 const selectAllAtores = async function(){
     
     try {
@@ -147,5 +159,6 @@ module.exports = {
     updateAtores,
     selectAllAtores,
     selectByIdAtores,
+    deleteAtor,
     selectByNameAtores
 }
