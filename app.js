@@ -357,7 +357,7 @@ app.delete('/v2/Acme-Filmes/classificacao/:id', cors(), async function(request, 
     response.status(200)
     response.json(dadosClassificacao)
 })
-]
+
 app.listen(8080, function(){
     console.log('A API está no ar e aguardando requisições')
 })
