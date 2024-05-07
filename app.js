@@ -111,7 +111,10 @@ app.get('/v2/Acme-Filmes/Generos', cors(), async function(request, response, nex
     }
 })
 
-// ---------------------------------------------------------------------------------------
+
+
+
+// ----------------------------------- ID ----------------------------------------------------
 
 //filme por id - ok
 app.get('/v2/Acme-Filmes/Filmes/:id', cors(), async function(request, response, next){
@@ -168,7 +171,7 @@ app.get('/v1/Acme-Filmes/Classificacao/:id', cors(), async function(request, res
 
 })
 
-// ---------------------------------------------------------------------------------------
+// --------------------------------------- NOME ------------------------------------------------
 
 // filmes por nome - testar
 app.get('/v2/Acme-Filmes/filmes/:nome', cors(), async function(request, response, next){
@@ -181,12 +184,12 @@ app.get('/v2/Acme-Filmes/filmes/:nome', cors(), async function(request, response
 
 })
 
-// ---------------------------------------------------------------------------------------
+// --------------------------------------- NOVO ------------------------------------------------
 
 //novo filme - ok
 app.post('/v2/Acme-Filmes/filme', cors(), bodyParserJson, async function(request, response, next){
 
-    let contentType = request.header('content-type')
+    let contentType = request.headers['content-type']
 
     let dadosBody = request.body
 
@@ -199,7 +202,7 @@ app.post('/v2/Acme-Filmes/filme', cors(), bodyParserJson, async function(request
 //novo genero - ok
 app.post('/v2/Acme-Filmes/Genero', cors(), bodyParserJson, async function(request, response, next){
 
-    let contentType = request.header('content-type')
+    let contentType = request.headers['content-type']
 
     let dadosBody = request.body
 
@@ -212,7 +215,7 @@ app.post('/v2/Acme-Filmes/Genero', cors(), bodyParserJson, async function(reques
 //nova class - testar
 app.post('/v2/Acme-Filmes/Classificacao', cors(), bodyParserJson, async function(request, response, next){
 
-    let contentType = request.header('content-type')
+    let contentType = request.headers['content-type']
 
     let dadosBody = request.body
 
@@ -225,7 +228,7 @@ app.post('/v2/Acme-Filmes/Classificacao', cors(), bodyParserJson, async function
 //nova ator - testar
 app.post('/v2/Acme-Filmes/Ator', cors(), bodyParserJson, async function(request, response, next){
 
-    let contentType = request.header('content-type')
+    let contentType = request.headers['content-type']
 
     let dadosBody = request.body
 
@@ -238,7 +241,7 @@ app.post('/v2/Acme-Filmes/Ator', cors(), bodyParserJson, async function(request,
 //novos diretores - testar
 app.post('/v2/Acme-Filmes/Diretores', cors(), bodyParserJson, async function(request, response, next){
 
-    let contentType = request.header('content-type')
+    let contentType = request.headers['content-type']
 
     let dadosBody = request.body
 
@@ -249,7 +252,7 @@ app.post('/v2/Acme-Filmes/Diretores', cors(), bodyParserJson, async function(req
 })
 
 
-// ---------------------------------------------------------------------------------------
+// -------------------------------------- ATUALIZAR -------------------------------------------------
 
 //atualizar filme - ok
 app.put('/v2/Acme-Filmes/Filme/Atualizar/:id', cors (), async function(request, response, next){
@@ -311,7 +314,7 @@ app.put('/v2/Acme-Filmes/Classificacao/Atualizar/:id', cors (), async function(r
     response.json(resultClassificacaoUpdate)
 })
 
-// ---------------------------------------------------------------------------------------
+// ------------------------------------ DELETE ---------------------------------------------------
 
 //delete filme - ok
 app.delete('/v2/Acme-Filmes/filme/:id', cors(), async function(request, response){

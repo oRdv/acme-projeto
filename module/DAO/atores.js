@@ -19,12 +19,14 @@ const insertNovoAtor = async function(dadosAtor){
              sql = `insert into tbl_atores (nome, 
                                             data_nascimento, 
                                             data_falecimento,   
-                                            foto) 
+                                            foto,
+                                            id_sexo) 
                                             values (
                                                 '${dadosAtor.nome}',
                                                 '${dadosAtor.data_nascimento}',
                                                 null,
-                                                '${dadosAtor.foto}'
+                                                '${dadosAtor.foto}',
+                                                '${dadosAtor.id_sexo}'
                                                 )`
 
                                                 // idSQL = `select cast(id as decimal) from tbl_filme order by id desc limit 1`
@@ -33,12 +35,14 @@ const insertNovoAtor = async function(dadosAtor){
             sql = `insert into tbl_atores (nome, 
                                             data_nascimento, 
                                             data_falecimento,   
-                                            foto) 
+                                            foto,
+                                            id_sexo) 
                                             values (
                                                 '${dadosAtor.nome}',
                                                 '${dadosAtor.data_nascimento}',
                                                 '${dadosAtor.data_falecimento}',
-                                                '${dadosAtor.foto}'
+                                                '${dadosAtor.foto}',
+                                                '${dadosAtor.id_sexo}'
                                                 )`
 
                                                 // idSQL = `select cast(id as decimal) from tbl_filme order by id desc limit 1`

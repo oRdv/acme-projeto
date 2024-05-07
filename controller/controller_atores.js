@@ -4,16 +4,19 @@
 const message = require('../modulo/config.js')
 //importe do arquivo DAO para maipular dados dos filmes 
 const atoresDAO = require('../module/DAO/atores.js')
+const nacionalidadeDAO = require('../module/DAO/nacionalidade.js')
+const sexoDAO = require('../module/DAO/sexo.js')
 const { json } = require('body-parser')
 
 const setInserirNovoAtor = async function (dadosAtor, contentType) {
 
     try {
+        let statusValidated = false
+        let novoAtorJson = {}
+        let arrayNacs = dadosBody.nacionalidade
 
         if (String(contentType).toLowerCase() == 'application/json') {
-
-            let statusValidated = false
-            let novoAtorJson = {}
+          
 
             if (dadosAtor.nome == ''                    || dadosAtor.nome == undefined                    || dadosAtor.nome == null                    || dadosAtor.nome.length > 100             ||
                 dadosAtor.data_nascimento == ''         || dadosAtor.data_nascimento == undefined         || dadosAtor.data_nascimento == null         || dadosAtor.data_nascimento.length > 8   ||
@@ -43,9 +46,17 @@ const setInserirNovoAtor = async function (dadosAtor, contentType) {
                 //se  variavel for verdadeira, podemos encaminhar os dados para o DAO
                 if (statusValidated = true) {
                     //ecaminha os dados para o dao
-                    let novoAtorJson = await atoresDAO.insertnovoAtorJson(dadosAtor)
+                    let novoAtorJson = await atoresDAO.insertNovoAtor(dadosAtor)
                     
                     if (novoAtorJson) {
+                        for (let index = 0; index < arrayNacs.length; index++) {
+                            const element = arrayNacs[index]
+                            let nacionalidade = await nacionalidade.insertAtorNacionalidade(lastId[0].id, element)
+                            console.log(nacionalidade)
+                        }
+                        let nasci = await nacionalidadeDAO.selectNacionalidadeByAtor(lastId[0].id)
+                        dadosBody.nacionalidade = nasci
+
                         //cria o json e retorna informacoes com requisicao e os dado novos
                         novoAtorJson.status = message.SUCESSED_CREATED_ITEM.status
                         novoAtorJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
@@ -78,6 +89,7 @@ const setAtualizarAtor = async function (id, dadosAtor, contentType) {
         if (String(contentType).toLowerCase() == 'application/json') {
 
             let statusValidated = false
+            let arrayNacs= dadosBody.nacionalidade
             let novoAtorJson = {}
 
             if(id == '' || id == undefined || isNaN(id) ||
@@ -91,40 +103,66 @@ const setAtualizarAtor = async function (id, dadosAtor, contentType) {
                 return message.ERROS_REQUIRED_FIELDS //400
 
             }else{
-                if(dadosAtor.data_falecimento != null && dadosAtor.data_falecimento != '' && dadosAtor.data_falecimento != undefined){
-    
-    
-                    if(dadosAtor.data_falecimento.length != 10){
-                        return message.ERROS_REQUIRED_FIELDS //400
+                if (dadosBody.nome == null || dadosBody.nome == undefined || dadosBody.nome == '' || dadosBody.nome.length > 100 ||
+                dadosBody.data_nascimento == null || dadosBody.data_nascimento == undefined || dadosBody.data_nascimento == '' || dadosBody.data_nascimento.length != 10 ||
+                // dadosBody.nacionalidade ==  null || dadosBody.nacionalidade == undefined || dadosBody.nacionalidade != Object ||
+                dadosBody.id_sexo == '' || dadosBody.id_sexo == undefined || dadosBody.id_sexo == null || isNaN(dadosBody.id_sexo)) {
+                    return message.ERROR_INVALID_REQUIRED_FIELDS
+                } else {
+                    let validateStatus =  false
+                    if(dadosBody.biografia != null || dadosBody.biografia != undefined || dadosBody.biografia != ''){
+                        if(dadosBody.biografia == null || dadosBody.biografia == undefined || dadosBody.biografia == '' || dadosBody.biografia.length > 655000 ){
+                        return message.ERROR_INVALID_REQUIRED_FIELDS
                     }else{
-                        statusValidated = true
+                        validateStatus = true
                     }
                 }else{
-                    statusValidated = true
+                    validateStatus = true
                 }
-    
-                if(statusValidated){
-                    dadosAtor.id = id
-    
-                    let novoAtor = await atoresDAO.updateAtores(dadosAtor)
-    
-                    if(novoAtor){
-                        novoAtorJson.ator = dadosAtor
-                        novoAtorJson.status = message.SUCCESS_UPDATED_ITEM.status
-                        novoAtorJson.status_code = message.SUCCESS_UPDATED_ITEM.status_code
-                        novoAtorJson.message = message.SUCCESS_UPDATED_ITEM.message
-    
-                        return novoAtorJson //201
-                    }else{
-                        return message.ERROS_INTERNAL_SERVER_DB //500
+                    if (validateStatus) {
+                        let verifyId = await atorDAO.selectAtorById(idAtor)
+                        if(verifyId){
+                            dadosBody.id = idAtor
+                            let att = await atorDAO.updateAtor(idAtor, dadosBody)
+                            let getAtor = await atorDAO.selectAtorById(idAtor)
+                            if (att) {
+                                await nacionalidadeDAO.deleteNacionalidadeByAtor(idAtor)
+
+                                for (let index = 0; index < arrayNacs.length; index++) {
+                                    const nacUpdate = arrayNacs[index];
+
+                                                
+                                    await nacionalidadeDAO.insertAtorNacionalidade(idAtor, nacUpdate)
+                                }
+                                let dadosUpdate = getAtor[0]
+                                let nasci = await nacionalidadeDAO.selectNacionalidadeByAtor(getAtor[0].id)
+                                dadosUpdate.nacionalidade = nasci
+                                let sexo = await sexoDAO.selectSexoById(getAtor[0].id_sexo)
+                                delete dadosUpdate.id_sexo
+                                dadosUpdate.sexo = sexo
+                                atorJSON.ator = dadosUpdate
+                                atorJSON.status = message.SUCCESS_CREATED_ITEM.status
+                                atorJSON.status_code = message.SUCCESS_CREATED_ITEM.status_code
+                                atorJSON.message = message.SUCCESS_CREATED_ITEM.message
+
+                                return atorJSON
+                                } else {
+                                return message.ERROR_INTERNAL_SERVER_DB
+                            }
+
+                        }else{
+                            return message.ERROR_NOT_FOUND
+                        }
                     }
                 }
             }
+        }else{
+            return message.ERROR_UNSUPORTED_CONTENT_TYPE
         }
+        
     } catch (error) {
-        return message.ERROS_INTERNAL_SERVER
+        return message.ERROR_INTERNAL_SERVER
     }
-
 }
 
 const setExcluirAtor = async function (id) {
@@ -158,60 +196,84 @@ const setExcluirAtor = async function (id) {
 }
 
 const getListarAtores = async function () {
-    //Cria um objeto JSON
-    let atoresJson = {}
+   try {
 
-    //Puxa os dados ela função do DAO para reornar o dados do banco 
-    let dadosAtor = await atoresDAO.selectAllAtores()
-    console.log(dadosAtor)
+     //Cria um objeto JSON
+     let atoresJson = {}
 
-    //Validação para criar um JSON do dados 
-    if (dadosAtor) {
+     //Puxa os dados ela função do DAO para reornar o dados do banco 
+     let dadosAtor = await atoresDAO.selectAllAtores()
+     console.log(dadosAtor)
+ 
+     //Validação para criar um JSON do dados 
+     if (dadosAtor) {
+        for (let index = 0; index < dadosAtor.length; index++) {
+            const ator = dadosAtor[index ]
+            let nasci = await nacionalidadeDAO.selectNacionalidadeByAtor(ator.id)
+            ator.nacionalidade = nasci
 
-        if (dadosAtor.length > 0) {
-            //Cria o JSON de retorno dos dados
-            atoresJson.atores = dadosAtor
-            atoresJson.quantidade = dadosAtor.length
-            atoresJson.status_code = 200
+            let sexo = await sexoDAO.selectSexoById(ator.id_sexo)
+            delete ator.id_sexo
+            ator.sexo = sexo
 
-            return atoresJson
-
-        } else {
-            return message.ERROS_NOT_FOUND
-        }
-
-    } else {
-        return message.ERROS_INTERNAL_SERVER_DB
-    }
+            }
+             //Cria o JSON de retorno dos dados 
+             atoresJson.atores = dadosAtor
+             atoresJson.quantidade = dadosAtor.length
+             atoresJson.status_code = 200
+ 
+             return atoresJson
+ 
+         } else { 
+             return message.ERROS_INTERNAL_SERVER_DB
+         }
+    
+   } catch (error) {
+    return message.ERROS_INTERNAL_SERVER
+   }
 
 }
 
 const getBuscarAtor = async function (id) {
-    //recebe o id pelo app
-    let idAtor = id
-    let atoresJson = {}
+ try {
+       //recebe o id pelo app
+       let idAtor = id
+       let atoresJson = {}
+   
+       if (idAtor == '' || idAtor == undefined || isNaN(idAtor)) {
+           return message.ERROS_INVALID_ID
+           
+       } else {
+           let dadosAtor = await atoresDAO.selectByIdAtores (idAtor)
+   
+           if (dadosAtor) {
+               if (dadosAtor.length > 0) {
 
-    if (idAtor == '' || idAtor == undefined || isNaN(idAtor)) {
-        return message.ERROS_INVALID_ID
-    } else {
-        let dadosAtor = await atoresDAO.selectByIdAtores (idAtor)
+                let nasci = await nacionalidadeDAO.selectNacionalidadeByAtor(idAtor)
+                dadosAtor[0].nacionalidade = nasci
+                let sexo = await sexoDAO.selectSexoById(dadosAtor[0].id_sexo)
+                console.log(dadosAtor.id_sexo);
+                delete dadosAtor[0].id_sexo
+                dadosAtor[0].sexo = sexo
+                console.log(dadosAtor)
 
-        if (dadosAtor) {
-
-            if (dadosAtor.length > 0) {
                 atoresJson.ator = dadosAtor
                 atoresJson.status_code = 200
+   
+                   return atoresJson
+   
+               } else {
+                   return message.ERROS_NOT_FOUND
+               }
+               //monsta o json com o retorno dos dados
+           } else {
+               return message.ERROS_INTERNAL_SERVER_DB
+           }
+       }
 
-                return atoresJson
-
-            } else {
-                return message.ERROS_NOT_FOUND
-            }
-            //monsta o json com o retorno dos dados
-        } else {
-            return message.ERROS_INTERNAL_SERVER_DB
-        }
-    }
+ } catch (error) {
+    return message.ERROS_INTERNAL_SERVER
+ }
 }
 
 

@@ -9,11 +9,12 @@ const { json } = require('body-parser')
 const setInserirNovoDiretor = async function (dadosDiretor, contentType) {
 
     try {
+        let statusValidated = false
+        let novoDiretorJSON = {}
+        let arrayNacs = dadosBody.nacionalidade
 
         if (String(contentType).toLowerCase() == 'application/json') {
-
-            let statusValidated = false
-            let novoDiretorJSON = {}
+          
 
             if (dadosDiretor.nome == ''                    || dadosDiretor.nome == undefined                    || dadosDiretor.nome == null                    || dadosDiretor.nome.length > 100             ||
                 dadosDiretor.data_nascimento == ''         || dadosDiretor.data_nascimento == undefined         || dadosDiretor.data_nascimento == null         || dadosDiretor.data_nascimento.length > 8   ||
@@ -43,26 +44,25 @@ const setInserirNovoDiretor = async function (dadosDiretor, contentType) {
                 //se  variavel for verdadeira, podemos encaminhar os dados para o DAO
                 if (statusValidated = true) {
                     //ecaminha os dados para o dao
-                    let novoDiretorJSON = await diretoresDAO.insertNovoDiretor(dadosDiretor)
-    
-    
+                    let novoDiretorJSON = await atoresDAO.insertNovoAtor(dadosDiretor)
                     
                     if (novoDiretorJSON) {
-        
-                        //cria o json e retorna informacoes com requisicao e os dado novos
-                        novoDiretor.status = message.SUCESSED_CREATED_ITEM.status
-        
-                        novoDiretor.status_code = message.SUCESSED_CREATED_ITEM.status_code
-        
-                        novoDiretor.message = message.SUCESSED_CREATED_ITEM.message
-        
-                        novoDiretor.diretor = dadosDiretor
-        
-                        novoDiretor.id = dadosDiretor.id
-        
+                        for (let index = 0; index < arrayNacs.length; index++) {
+                            const element = arrayNacs[index]
+                            let nacionalidade = await nacionalidade.insertAtorNacionalidade(lastId[0].id, element)
+                            console.log(nacionalidade)
+                        }
+                        let nasci = await nacionalidadeDAO.selectNacionalidadeByAtor(lastId[0].id)
+                        dadosBody.nacionalidade = nasci
 
-                        return novoDiretor//201
-        
+                        //cria o json e retorna informacoes com requisicao e os dado novos
+                        novoDiretorJSON.status = message.SUCESSED_CREATED_ITEM.status
+                        novoDiretorJSON.status_code = message.SUCESSED_CREATED_ITEM.status_code
+                        novoDiretorJSON.message = message.SUCESSED_CREATED_ITEM.message
+                        novoDiretorJSON.ator = dadosDiretor
+                        novoDiretorJSON.id = dadosDiretor.id
+
+                        return novoDiretorJSON//201
                     } else {
                      return message.ERROS_INTERNAL_SERVER_DB //500
                     }
@@ -77,6 +77,7 @@ const setInserirNovoDiretor = async function (dadosDiretor, contentType) {
     } catch (erro) {
         return message.ERROS_INTERNAL_SERVER
     }
+
 
 }
 
