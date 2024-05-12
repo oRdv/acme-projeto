@@ -20,45 +20,45 @@ const insertNovoAtor = async function(dadosAtor){
                                             data_nascimento, 
                                             data_falecimento,   
                                             foto,
+                                            biografia,
                                             id_sexo) 
                                             values (
                                                 '${dadosAtor.nome}',
                                                 '${dadosAtor.data_nascimento}',
                                                 null,
                                                 '${dadosAtor.foto}',
+                                                '${dadosAtor.biografia}',
                                                 '${dadosAtor.id_sexo}'
                                                 )`
 
-                                                // idSQL = `select cast(id as decimal) from tbl_filme order by id desc limit 1`
         } else {
             
             sql = `insert into tbl_atores (nome, 
                                             data_nascimento, 
                                             data_falecimento,   
                                             foto,
+                                            biografia,
                                             id_sexo) 
                                             values (
                                                 '${dadosAtor.nome}',
                                                 '${dadosAtor.data_nascimento}',
                                                 '${dadosAtor.data_falecimento}',
                                                 '${dadosAtor.foto}',
+                                                '${dadosAtor.biografia}',
                                                 '${dadosAtor.id_sexo}'
                                                 )`
 
-                                                // idSQL = `select cast(id as decimal) from tbl_filme order by id desc limit 1`
         }
     
         //$executeRawUnsafe para utilizar um sql de insert que nao retornam valores. o outro queryrawunsafee para select e retornm dados.
-        console.log(sql)
         let result = await prisma.$executeRawUnsafe(sql)
-        // let idResult = await prisma.$queryRawUnsafe(idSQL)
-        console.log(result)
-        
-        // if(result /*&& idResult*/){
-            return result //, idResult
-        // }else{
-        //     return false
-        // }
+
+        if(result){
+            return result
+        } else {
+            return false
+        }
+
     }catch(error){
         return false
     }
@@ -76,12 +76,18 @@ const updateAtores = async function(){
             data_nascimento =  '${dadosAtor.data_nascimento}',
             data_falecimento = '${dadosAtor.data_falecimento}',
             foto = '${dadosAtor.foto}', 
+            biografia =   '${dadosAtor.biografia}',
+            id_sexo =  '${dadosAtor.id_sexo}',
             where tbl_atores.id = ${dadosAtor.id}`
+
         }else{
+
             sql = `update tbl_atores set 
             nome = '${dadosAtor.nome}',
             data_nascimento =  '${dadosAtor.data_nascimento}',
             foto = '${dadosAtor.foto}', 
+            biografia =  '${dadosAtor.biografia}',
+            id_sexo =  '${dadosAtor.id_sexo}',
             where tbl_atores.id = ${dadosAtor.id}`
         }
         

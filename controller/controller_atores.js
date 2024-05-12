@@ -12,16 +12,18 @@ const setInserirNovoAtor = async function (dadosAtor, contentType) {
 
     try {
         let statusValidated = false
-        let novoAtorJson = {}
-        let arrayNacs = dadosBody.nacionalidade
+        let AtorJson = {}
+        let arrayNacs = dadosAtor.nacionalidade
 
+     
         if (String(contentType).toLowerCase() == 'application/json') {
           
 
             if (dadosAtor.nome == ''                    || dadosAtor.nome == undefined                    || dadosAtor.nome == null                    || dadosAtor.nome.length > 100             ||
-                dadosAtor.data_nascimento == ''         || dadosAtor.data_nascimento == undefined         || dadosAtor.data_nascimento == null         || dadosAtor.data_nascimento.length > 8   ||
-                dadosAtor.foto == ''                    || dadosAtor.foto == undefined                    || dadosAtor.foto == null                    || dadosAtor.foto.length > 180             
-                ){
+                dadosAtor.data_nascimento == ''         || dadosAtor.data_nascimento == undefined         || dadosAtor.data_nascimento == null         || dadosAtor.data_nascimento.length > 8    ||
+                dadosAtor.foto == ''                    || dadosAtor.foto == undefined                    || dadosAtor.foto == null                    || dadosAtor.foto.length > 180             ||  
+                dadosAtor.biografia == ''               || dadosAtor.biografia == undefined               || dadosAtor.biografia == null               || dadosAtor.biografia.length > 255        ||    
+                dadosAtor.id_sexo == ''                 || dadosAtor.id_sexo == undefined                 || dadosAtor.id_sexo == null                 || isNaN(dadosAtor.id_sexo)){
 
                 return message.ERROS_REQUIRED_FIELDS
 
@@ -44,27 +46,32 @@ const setInserirNovoAtor = async function (dadosAtor, contentType) {
                 }
 
                 //se  variavel for verdadeira, podemos encaminhar os dados para o DAO
-                if (statusValidated = true) {
+                if (statusValidated === true) {
                     //ecaminha os dados para o dao
                     let novoAtorJson = await atoresDAO.insertNovoAtor(dadosAtor)
+                    let id = await atoresDAO.selectByIdAtores()
                     
                     if (novoAtorJson) {
                         for (let index = 0; index < arrayNacs.length; index++) {
                             const element = arrayNacs[index]
-                            let nacionalidade = await nacionalidade.insertAtorNacionalidade(lastId[0].id, element)
+                            let nacionalidade = await nacionalidade.insertAtorNacionalidade(id[0].id, element)
                             console.log(nacionalidade)
                         }
-                        let nasci = await nacionalidadeDAO.selectNacionalidadeByAtor(lastId[0].id)
-                        dadosBody.nacionalidade = nasci
+                        let nasci = await nacionalidadeDAO.selectNacionalidadeByAtor(id[0].id)
+                        let sexo = await sexoDAO.selectSexoById(dadosAtor.id_sexo)
+                        dadosAtor.id = id[0].id
+                        delete dadosAtor.id_sexo
+                        dadosAtor.sexo = sexo
+                        dadosAtor.nacionalidade = nasci
 
                         //cria o json e retorna informacoes com requisicao e os dado novos
-                        novoAtorJson.status = message.SUCESSED_CREATED_ITEM.status
-                        novoAtorJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
-                        novoAtorJson.message = message.SUCESSED_CREATED_ITEM.message
-                        novoAtorJson.ator = dadosAtor
-                        novoAtorJson.id = dadosAtor.id
+                        AtorJson.status = message.SUCESSED_CREATED_ITEM.status
+                        AtorJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
+                        AtorJson.message = message.SUCESSED_CREATED_ITEM.message
+                        AtorJson.ator = dadosAtor
+                        AtorJson.id = dadosAtor.id
 
-                        return novoAtorJson//201
+                        return AtorJson//201
                     } else {
                      return message.ERROS_INTERNAL_SERVER_DB //500
                     }
@@ -83,87 +90,69 @@ const setInserirNovoAtor = async function (dadosAtor, contentType) {
 }
 
 const setAtualizarAtor = async function (id, dadosAtor, contentType) {
-
     try {
-
         if (String(contentType).toLowerCase() == 'application/json') {
+            let statusValidated = false;
+            let arrayNacs = dadosAtor.nacionalidade;
+            let atorJSON = {};
 
-            let statusValidated = false
-            let arrayNacs= dadosBody.nacionalidade
-            let novoAtorJson = {}
-
-            if(id == '' || id == undefined || isNaN(id) ||
-            dadosAtor.nome == ''                     || dadosAtor.nome == undefined            || dadosAtor.nome == null            || dadosAtor.nome.length > 80               ||
-            dadosAtor.sinopse == ''                  || dadosAtor.sinopse == undefined         || dadosAtor.sinopse == null         || dadosAtor.sinopse.length > 65000         ||
-            dadosAtor.duracao == ''                  || dadosAtor.duracao == undefined         || dadosAtor.duracao == null         || dadosAtor.duracao.length > 8             ||
-            dadosAtor.data_lancamento == ''          || dadosAtor.data_lancamento == undefined || dadosAtor.data_lancamento == null || dadosAtor.data_lancamento.length != 10   ||
-            dadosAtor.foto_capa == ''                || dadosAtor.foto_capa == undefined       || dadosAtor.foto_capa == null       || dadosAtor.foto_capa.length > 200         ||
-            dadosAtor.valor_unitario.length > 6
-            ){ 
-                return message.ERROS_REQUIRED_FIELDS //400
-
-            }else{
-                if (dadosBody.nome == null || dadosBody.nome == undefined || dadosBody.nome == '' || dadosBody.nome.length > 100 ||
-                dadosBody.data_nascimento == null || dadosBody.data_nascimento == undefined || dadosBody.data_nascimento == '' || dadosBody.data_nascimento.length != 10 ||
-                // dadosBody.nacionalidade ==  null || dadosBody.nacionalidade == undefined || dadosBody.nacionalidade != Object ||
-                dadosBody.id_sexo == '' || dadosBody.id_sexo == undefined || dadosBody.id_sexo == null || isNaN(dadosBody.id_sexo)) {
-                    return message.ERROR_INVALID_REQUIRED_FIELDS
+            if (id == '' || id == undefined || isNaN(id) || id == null) {
+                return message.ERROS_INVALID_ID;
+            } else {
+                if (
+                    dadosAtor.nome == '' || dadosAtor.nome == undefined || dadosAtor.nome == null || dadosAtor.nome.length > 100 ||
+                    dadosAtor.data_nascimento == '' || dadosAtor.data_nascimento == undefined || dadosAtor.data_nascimento == null ||  dadosAtor.data_nascimento.length > 8 ||
+                    dadosAtor.foto == '' ||  dadosAtor.foto == undefined ||  dadosAtor.foto == null ||  dadosAtor.foto.length > 180 ||  
+                    dadosAtor.biografia == '' || dadosAtor.biografia == undefined || dadosAtor.biografia == null || dadosAtor.biografia.length > 255 ||    
+                    dadosAtor.id_sexo == '' ||  dadosAtor.id_sexo == undefined || dadosAtor.id_sexo == null ||  isNaN(dadosAtor.id_sexo)
+                ) {
+                    return message.ERROS_REQUIRED_FIELDS;
                 } else {
-                    let validateStatus =  false
-                    if(dadosBody.biografia != null || dadosBody.biografia != undefined || dadosBody.biografia != ''){
-                        if(dadosBody.biografia == null || dadosBody.biografia == undefined || dadosBody.biografia == '' || dadosBody.biografia.length > 655000 ){
-                        return message.ERROR_INVALID_REQUIRED_FIELDS
-                    }else{
-                        validateStatus = true
-                    }
-                }else{
-                    validateStatus = true
-                }
-                    if (validateStatus) {
-                        let verifyId = await atorDAO.selectAtorById(idAtor)
-                        if(verifyId){
-                            dadosBody.id = idAtor
-                            let att = await atorDAO.updateAtor(idAtor, dadosBody)
-                            let getAtor = await atorDAO.selectAtorById(idAtor)
-                            if (att) {
-                                await nacionalidadeDAO.deleteNacionalidadeByAtor(idAtor)
-
-                                for (let index = 0; index < arrayNacs.length; index++) {
-                                    const nacUpdate = arrayNacs[index];
-
-                                                
-                                    await nacionalidadeDAO.insertAtorNacionalidade(idAtor, nacUpdate)
-                                }
-                                let dadosUpdate = getAtor[0]
-                                let nasci = await nacionalidadeDAO.selectNacionalidadeByAtor(getAtor[0].id)
-                                dadosUpdate.nacionalidade = nasci
-                                let sexo = await sexoDAO.selectSexoById(getAtor[0].id_sexo)
-                                delete dadosUpdate.id_sexo
-                                dadosUpdate.sexo = sexo
-                                atorJSON.ator = dadosUpdate
-                                atorJSON.status = message.SUCCESS_CREATED_ITEM.status
-                                atorJSON.status_code = message.SUCCESS_CREATED_ITEM.status_code
-                                atorJSON.message = message.SUCCESS_CREATED_ITEM.message
-
-                                return atorJSON
-                                } else {
-                                return message.ERROR_INTERNAL_SERVER_DB
-                            }
-
-                        }else{
-                            return message.ERROR_NOT_FOUND
-                        }
-                    }
+                    statusValidated = true;
                 }
             }
-        }else{
-            return message.ERROR_UNSUPORTED_CONTENT_TYPE
+
+            if (statusValidated) {
+                let verifyId = await atoresDAO.selectAtorById(idAtor);
+                if (verifyId) {
+                    dadosAtor.id = idAtor;
+                    let atualizar = await atoresDAO.updateAtores(idAtor, dadosAtor);
+                    let getAtor = await atoresDAO.selectAtorById(idAtor);
+                    if (atualizar) {
+                        await nacionalidadeDAO.deleteNacionalidadeByAtor(idAtor);
+
+                        for (let index = 0; index < arrayNacs.length; index++) {
+                            const nacUpdate = arrayNacs[index];
+                            await nacionalidadeDAO.insertAtorNacionalidade(idAtor, nacUpdate);
+                        }
+                        
+                        let dadosUpdate = getAtor[0];
+                        let nasci = await nacionalidadeDAO.selectNacionalidadeByAtor(getAtor[0].id);
+                        dadosUpdate.nacionalidade = nasci;
+                        let sexo = await sexoDAO.selectSexoById(getAtor[0].id_sexo);
+                        delete dadosUpdate.id_sexo;
+                        dadosUpdate.sexo = sexo;
+                        atorJSON.ator = dadosUpdate;
+                        atorJSON.status = message.SUCESSED_CREATED_ITEM.status;
+                        atorJSON.status_code = message.SUCESSED_CREATED_ITEM.status_code;
+                        atorJSON.message = message.SUCESSED_CREATED_ITEM.message;
+                        return atorJSON;
+                    } else {
+                        return message.ERROS_INTERNAL_SERVER_DB;
+                    }
+                } else {
+                    return message.ERROS_NOT_FOUND;
+                }
+            }
+        } else {
+            return message.ERROR_UNSUPORTED_CONTENT_TYPE;
         }
-        
     } catch (error) {
-        return message.ERROR_INTERNAL_SERVER
+        return message.ERROS_INTERNAL_SERVER;
     }
 }
+
+
 
 const setExcluirAtor = async function (id) {
 

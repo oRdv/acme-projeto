@@ -47,7 +47,7 @@ const setInserirNovoFilme = async function (dadosFilme, contentType) {
                 }
 
                 //se  variavel for verdadeira, podemos encaminhar os dados para o DAO
-                if (statusValidated = true) {
+                if (statusValidated === true) {
                     //ecaminha os dados para o dao
                     let novoFilme = await filmesDAO.insertNovoFilme(dadosFilme)
                     

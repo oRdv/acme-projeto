@@ -66,15 +66,13 @@ const insertNovoFilme = async function(dadosFilme){
         //$executeRawUnsafe para utilizar um sql de insert que nao retornam valores. o outro queryrawunsafee para select e retornm dados.
         console.log(sql)
         let result = await prisma.$executeRawUnsafe(sql)
-        // let idResult = await prisma.$queryRawUnsafe(idSQL)
-        console.log(result)
-        
-        // if(result /*&& idResult*/){
-            return result //, idResult
-        // }else{
-        //     return false
-        // }
+        if (result) {
+            return true
+        } else {
+            return false
+        }
     }catch(error){
+        console.log('passou...')
         return false
     }
 

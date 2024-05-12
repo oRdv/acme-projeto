@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client')
+const { deleteClassificacao } = require('./classificacao')
 
 const prisma = new PrismaClient()
 
@@ -18,42 +19,46 @@ const insertNovoDiretor = async function(dadosDiretor){
              sql = `insert into tbl_diretores (nome, 
                                             data_nascimento, 
                                             data_falecimento,   
-                                            foto) 
+                                            foto,
+                                            biografia,
+                                            id_sexo) 
                                             values (
                                                 '${dadosDiretor.nome}',
                                                 '${dadosDiretor.data_nascimento}',
                                                 null,
-                                                '${dadosDiretor.foto}'
+                                                '${dadosDiretor.foto}',
+                                                '${dadosDiretor.biografia}',
+                                                '${dadosDiretor.id_sexo}'
                                                 )`
 
-                                                // idSQL = `select cast(id as decimal) from tbl_filme order by id desc limit 1`
         } else {
             
             sql = `insert into tbl_diretores (nome, 
                                             data_nascimento, 
                                             data_falecimento,   
-                                            foto) 
+                                            foto,
+                                            biografia,
+                                            id_sexo) 
                                             values (
                                                 '${dadosDiretor.nome}',
                                                 '${dadosDiretor.data_nascimento}',
                                                 '${dadosDiretor.data_falecimento}',
-                                                '${dadosDiretor.foto}'
+                                                '${dadosDiretor.foto}',
+                                                '${dadosDiretor.biografia}',
+                                                '${dadosDiretor.id_sexo}'
                                                 )`
 
-                                                // idSQL = `select cast(id as decimal) from tbl_filme order by id desc limit 1`
         }
     
         //$executeRawUnsafe para utilizar um sql de insert que nao retornam valores. o outro queryrawunsafee para select e retornm dados.
-        console.log(sql)
         let result = await prisma.$executeRawUnsafe(sql)
-        // let idResult = await prisma.$queryRawUnsafe(idSQL)
-        console.log(result)
-        
-        // if(result /*&& idResult*/){
-            return result //, idResult
-        // }else{
-        //     return false
-        // }
+
+        if(result){
+            return result
+        } else {
+            return false
+        }
+
     }catch(error){
         return false
     }
@@ -71,12 +76,18 @@ const updateDiretor = async function(){
             data_nascimento =  '${dadosDiretor.data_nascimento}',
             data_falecimento = '${dadosDiretor.data_falecimento}',
             foto = '${dadosDiretor.foto}', 
+            biografia =   '${dadosDiretor.biografia}',
+            id_sexo =  '${dadosDiretor.id_sexo}',
             where tbl_atores.id = ${dadosDiretor.id}`
+
         }else{
+
             sql = `update tbl_diretores set 
             nome = '${dadosDiretor.nome}',
             data_nascimento =  '${dadosDiretor.data_nascimento}',
             foto = '${dadosDiretor.foto}', 
+            biografia =  '${dadosDiretor.biografia}',
+            id_sexo =  '${dadosDiretor.id_sexo}',
             where tbl_atores.id = ${dadosDiretor.id}`
         }
         
@@ -94,6 +105,17 @@ const updateDiretor = async function(){
 
 }
 
+const deleteDiretores= async (id) => {
+    try {
+        let sql = `delete from tbl_diretores where id = ${id}`;
+    
+        let redeletedDiretor = await prisma.$queryRawUnsafe(sql);
+    
+        return redeletedDiretor;
+      } catch (error) {
+        return false;
+    }
+}
 const selectAllDiretores = async function(){
     
     try {
@@ -112,19 +134,7 @@ const selectAllDiretores = async function(){
     }
 }
 
-const deleteDiretores = async (id) => {
-    try {
-        let sql = `delete from tbl_diretores where id = ${id}`;
-    
-        let redeletedDiretor = await prisma.$queryRawUnsafe(sql);
-    
-        return redeletedDiretor;
-      } catch (error) {
-        return false;
-    }
-}
-
-const selectByIdDiretores = async function(id){ 
+const selectByDiretoresID = async function(id){ 
     
     try {
         //sql pra pesquisa por id
@@ -158,7 +168,7 @@ module.exports = {
     insertNovoDiretor,
     updateDiretor,
     selectAllDiretores,
-    selectByIdDiretores,
-    selectByNameDiretores,
-    deleteDiretores
+    selectByDiretoresID,
+    deleteDiretores,
+    selectByNameDiretores
 }
