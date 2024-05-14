@@ -21,14 +21,16 @@ const insertNovoAtor = async function(dadosAtor){
                                             data_falecimento,   
                                             foto,
                                             biografia,
-                                            id_sexo) 
+                                            id_sexo,
+                                            id_nacionalidade ) 
                                             values (
                                                 '${dadosAtor.nome}',
                                                 '${dadosAtor.data_nascimento}',
                                                 null,
                                                 '${dadosAtor.foto}',
                                                 '${dadosAtor.biografia}',
-                                                '${dadosAtor.id_sexo}'
+                                                '${dadosAtor.id_sexo}',
+                                                '${dadosAtor.id_nacionalidade}'
                                                 )`
 
         } else {
@@ -38,14 +40,16 @@ const insertNovoAtor = async function(dadosAtor){
                                             data_falecimento,   
                                             foto,
                                             biografia,
-                                            id_sexo) 
+                                            id_sexo,
+                                            id_nacionalidade) 
                                             values (
                                                 '${dadosAtor.nome}',
                                                 '${dadosAtor.data_nascimento}',
                                                 '${dadosAtor.data_falecimento}',
                                                 '${dadosAtor.foto}',
                                                 '${dadosAtor.biografia}',
-                                                '${dadosAtor.id_sexo}'
+                                                '${dadosAtor.id_sexo}',
+                                                '${dadosAtor.id_nacionalidade}'
                                                 )`
 
         }

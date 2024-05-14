@@ -174,7 +174,7 @@ app.get('/v1/Acme-Filmes/Classificacao/:id', cors(), async function(request, res
 // --------------------------------------- NOME ------------------------------------------------
 
 // filmes por nome - testar
-app.get('/v2/Acme-Filmes/filmes/:nome', cors(), async function(request, response, next){
+app.get('/v2/Acme-Filmes/filtro/filme', cors(), async function(request, response, next){
     //Recebe o id encaminhado pela requisição 
    let nome = request.query.nome
    let dadosFilme = await controlerFilmes.getNameFilme(nome)
