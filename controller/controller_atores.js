@@ -22,11 +22,11 @@ const setInserirNovoAtor = async function (dadosAtor, contentType) {
           
 
             if (dadosAtor.nome == ''                    || dadosAtor.nome == undefined                    || dadosAtor.nome == null                    || dadosAtor.nome.length > 100             ||
-                dadosAtor.data_nascimento == ''         || dadosAtor.data_nascimento == undefined         || dadosAtor.data_nascimento == null         || dadosAtor.data_nascimento.length > 12    ||
+                dadosAtor.data_nascimento == ''         || dadosAtor.data_nascimento == undefined         || dadosAtor.data_nascimento == null         || dadosAtor.data_nascimento.length > 12   ||
                 dadosAtor.foto == ''                    || dadosAtor.foto == undefined                    || dadosAtor.foto == null                    || dadosAtor.foto.length > 180             ||  
                 dadosAtor.biografia == ''               || dadosAtor.biografia == undefined               || dadosAtor.biografia == null               || dadosAtor.biografia.length > 255        ||    
-                dadosAtor.sexo == ''                 || dadosAtor.sexo == undefined                 || dadosAtor.sexo == null                 || isNaN(dadosAtor.sexo)                || 
-                dadosAtor.nacionalidade == ''        || dadosAtor.nacionalidade == undefined        || dadosAtor.nacionalidade == null        || isNaN(dadosAtor.nacionalidade)       
+                dadosAtor.sexo == ''                    || dadosAtor.sexo == undefined                    || dadosAtor.sexo == null                    || isNaN(dadosAtor.sexo)                   || 
+                dadosAtor.nacionalidade == ''           || dadosAtor.nacionalidade == undefined           || dadosAtor.nacionalidade == null           || isNaN(dadosAtor.nacionalidade)        
                 ){
 
                 return message.ERROS_REQUIRED_FIELDS
